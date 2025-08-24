@@ -1,18 +1,5 @@
 package lexer
 
-// Could these Token constructors live in token?
-func newToken(tt TokenType, ch byte) Token {
-	return Token{Type: tt, Literal: string(ch)}
-}
-
-func isLetter(ch byte) bool {
-	return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_'
-}
-
-func isDigit(ch byte) bool {
-	return ch >= '0' && ch <= '9'
-}
-
 type Lexer struct {
 	input        string
 	position     int
@@ -44,9 +31,8 @@ func (l *Lexer) skipWhitespace() {
 	}
 }
 
-var keywords = map[string]TokenType{
-	"fn":  FUNCTION,
-	"let": LET,
+func isLetter(ch byte) bool {
+	return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_'
 }
 
 func (l *Lexer) readIdentifier() Token {
@@ -56,12 +42,11 @@ func (l *Lexer) readIdentifier() Token {
 		l.readChar()
 	}
 
-	s := l.input[start:l.readPosition]
-	if tt, ok := keywords[s]; ok {
-		return Token{Type: tt, Literal: s}
-	}
+	return NewIdentifier(l.input[start:l.readPosition])
+}
 
-	return Token{Type: IDENTIFIER, Literal: s}
+func isDigit(ch byte) bool {
+	return ch >= '0' && ch <= '9'
 }
 
 func (l *Lexer) readNumber() Token {
@@ -71,43 +56,21 @@ func (l *Lexer) readNumber() Token {
 		l.readChar()
 	}
 
-	s := l.input[start:l.readPosition]
-	return Token{Type: INT, Literal: s}
+	return NewInt(l.input[start:l.readPosition])
 }
 
 func (l *Lexer) NextToken() Token {
 	var t Token
 	l.skipWhitespace()
 
-	switch l.ch {
-	case '=':
-		t = newToken(ASSIGN, l.ch)
-	case '+':
-		t = newToken(PLUS, l.ch)
-	case ',':
-		t = newToken(COMMA, l.ch)
-	case ';':
-		t = newToken(SEMICOLON, l.ch)
-	case '(':
-		t = newToken(LPAREN, l.ch)
-	case ')':
-		t = newToken(RPAREN, l.ch)
-	case '{':
-		t = newToken(LBRACE, l.ch)
-	case '}':
-		t = newToken(RBRACE, l.ch)
-	case 0:
-		t = Token{Type: EOF}
-	default:
-		if isLetter(l.ch) {
-			return l.readIdentifier()
-		} else if isDigit(l.ch) {
-			return l.readNumber()
-		} else {
-			t = Token{Type: ILLEGAL}
-		}
+	if isLetter(l.ch) {
+		t = l.readIdentifier()
+	} else if isDigit(l.ch) {
+		t = l.readNumber()
+	} else {
+		t = NewToken(l.ch)
+		l.readChar() // Advance for the next read
 	}
 
-	l.readChar()
 	return t
 }
