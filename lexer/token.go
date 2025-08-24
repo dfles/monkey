@@ -17,22 +17,18 @@ const (
 	INT        = "INT"
 
 	// Operators
-	ASSIGN = "="
-	PLUS   = "+"
+	ASSIGN = "ASSIGN"
+	PLUS   = "PLUS"
 
 	// Delimiters
-	COMMA     = ","
-	SEMICOLON = ";"
-	LPAREN    = "("
-	RPAREN    = ")"
-	LBRACE    = "{"
-	RBRACE    = "}"
+	COMMA     = "COMMA"
+	SEMICOLON = "SEMICOLON"
+	LPAREN    = "LPAREN"
+	RPAREN    = "RPAREN"
+	LBRACE    = "LBRACE"
+	RBRACE    = "RBRACE"
 
 	// Keywords
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
 )
-
-func NewToken(tt TokenType, ch byte) Token {
-	return Token{Type: tt, Literal: string(ch)}
-}

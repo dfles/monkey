@@ -5,20 +5,26 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-	input := `=+(){},;`
+	input := `let five = 5;
+	let ten = 10;
+	`
 
 	tests := []struct {
 		expectedType    TokenType
 		expectedLiteral string
 	}{
+		{LET, "let"},
+		{IDENTIFIER, "five"},
 		{ASSIGN, "="},
-		{PLUS, "+"},
-		{LPAREN, "("},
-		{RPAREN, ")"},
-		{LBRACE, "{"},
-		{RBRACE, "}"},
-		{COMMA, ","},
+		{INT, "5"},
 		{SEMICOLON, ";"},
+
+		{LET, "let"},
+		{IDENTIFIER, "ten"},
+		{ASSIGN, "="},
+		{INT, "10"},
+		{SEMICOLON, ";"},
+
 		{EOF, ""},
 	}
 
