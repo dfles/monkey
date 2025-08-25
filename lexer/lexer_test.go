@@ -121,3 +121,52 @@ func TestNextTokenFunction(t *testing.T) {
 	l := New(input)
 	assertTokenizes(t, l, tests)
 }
+
+func TestNextTokenControlFlow(t *testing.T) {
+	input := `
+	let gt = fn(l, r) {
+		if (l > r) {
+			return true;
+		}
+
+		return false;
+	};
+	`
+
+	tests := []expectedToken{
+		{LET, "let"},
+		{IDENTIFIER, "gt"},
+		{ASSIGN, "="},
+		{FUNCTION, "fn"},
+		{LPAREN, "("},
+		{IDENTIFIER, "l"},
+		{COMMA, ","},
+		{IDENTIFIER, "r"},
+		{RPAREN, ")"},
+		{LBRACE, "{"},
+
+		{IF, "if"},
+		{LPAREN, "("},
+		{IDENTIFIER, "l"},
+		{GT, ">"},
+		{IDENTIFIER, "r"},
+		{RPAREN, ")"},
+		{LBRACE, "{"},
+		{RETURN, "return"},
+		{TRUE, "true"},
+		{SEMICOLON, ";"},
+		{RBRACE, "}"},
+		{RETURN, "return"},
+		{FALSE, "false"},
+		{SEMICOLON, ";"},
+
+		{RBRACE, "}"},
+		{SEMICOLON, ";"},
+
+		{EOF, ""},
+	}
+
+	l := New(input)
+	assertTokenizes(t, l, tests)
+
+}
