@@ -25,6 +25,33 @@ func assertTokenizes(t *testing.T, l *Lexer, tests []expectedToken) {
 	}
 }
 
+func TestNextTokenOperators(t *testing.T) {
+	input := `
+	!+-/*=
+	5 < 10 > 5
+	`
+
+	tests := []expectedToken{
+		{BANG, "!"},
+		{PLUS, "+"},
+		{MINUS, "-"},
+		{SLASH, "/"},
+		{ASTERISK, "*"},
+		{ASSIGN, "="},
+
+		{INT, "5"},
+		{LT, "<"},
+		{INT, "10"},
+		{GT, ">"},
+		{INT, "5"},
+
+		{EOF, ""},
+	}
+
+	l := New(input)
+	assertTokenizes(t, l, tests)
+}
+
 func TestNextTokenVariable(t *testing.T) {
 	input := `
 	let five = 5;

@@ -17,8 +17,14 @@ const (
 	INT        = "INT"
 
 	// Operators
-	ASSIGN = "ASSIGN"
-	PLUS   = "PLUS"
+	ASSIGN   = "ASSIGN"
+	PLUS     = "PLUS"
+	MINUS    = "MINUS"
+	BANG     = "BANG"
+	ASTERISK = "ASTERISK"
+	SLASH    = "SLASH"
+	LT       = "LT"
+	GT       = "GT"
 
 	// Delimiters
 	COMMA     = "COMMA"
@@ -36,13 +42,21 @@ const (
 var tokens = map[byte]TokenType{
 	'=': ASSIGN,
 	'+': PLUS,
+	'-': MINUS,
+	'!': BANG,
+	'*': ASTERISK,
+	'/': SLASH,
+	'<': LT,
+	'>': GT,
+
 	',': COMMA,
 	';': SEMICOLON,
 	'(': LPAREN,
 	')': RPAREN,
 	'{': LBRACE,
 	'}': RBRACE,
-	0:   EOF,
+
+	0: EOF,
 }
 
 func NewToken(ch byte) Token {
