@@ -4,21 +4,34 @@ import (
 	"testing"
 )
 
-func TestNextToken(t *testing.T) {
-	input := `let five = 5;
+type expectedToken struct {
+	expectedType    TokenType
+	expectedLiteral string
+}
+
+func assertTokenizes(t *testing.T, l *Lexer, tests []expectedToken) {
+	for i, et := range tests {
+		nt := l.NextToken()
+
+		if nt.Type != et.expectedType {
+			t.Fatalf("test[%d] - incorrect tokentype. expected=%q, got=%q",
+				i, et.expectedType, nt.Type)
+		}
+
+		if nt.Literal != et.expectedLiteral {
+			t.Fatalf("test[%d] - incorrect literal. expected=%q, got=%q",
+				i, et.expectedLiteral, nt.Literal)
+		}
+	}
+}
+
+func TestNextTokenVariable(t *testing.T) {
+	input := `
+	let five = 5;
 	let ten = 10;
-
-	let add = fn(x, y) {
-		x + y
-	};
-
-	let result = add(five, ten);
 	`
 
-	tests := []struct {
-		expectedType    TokenType
-		expectedLiteral string
-	}{
+	tests := []expectedToken{
 		{LET, "let"},
 		{IDENTIFIER, "five"},
 		{ASSIGN, "="},
@@ -31,6 +44,23 @@ func TestNextToken(t *testing.T) {
 		{INT, "10"},
 		{SEMICOLON, ";"},
 
+		{EOF, ""},
+	}
+
+	l := New(input)
+	assertTokenizes(t, l, tests)
+}
+
+func TestNextTokenFunction(t *testing.T) {
+	input := `
+	let add = fn(x, y) {
+		x + y
+	};
+
+	let result = add(5, 10);
+	`
+
+	tests := []expectedToken{
 		{LET, "let"},
 		{IDENTIFIER, "add"},
 		{ASSIGN, "="},
@@ -52,9 +82,9 @@ func TestNextToken(t *testing.T) {
 		{ASSIGN, "="},
 		{IDENTIFIER, "add"},
 		{LPAREN, "("},
-		{IDENTIFIER, "five"},
+		{INT, "5"},
 		{COMMA, ","},
-		{IDENTIFIER, "ten"},
+		{INT, "10"},
 		{RPAREN, ")"},
 		{SEMICOLON, ";"},
 
@@ -62,19 +92,5 @@ func TestNextToken(t *testing.T) {
 	}
 
 	l := New(input)
-	for i, et := range tests {
-		nt := l.NextToken()
-
-		// TODO: Consider factoring out the actual checking of types. This could let us
-		//       have more granular tests.
-		if nt.Type != et.expectedType {
-			t.Fatalf("test[%d] - incorrect tokentype. expected=%q, got=%q",
-				i, et.expectedType, nt.Type)
-		}
-
-		if nt.Literal != et.expectedLiteral {
-			t.Fatalf("test[%d] - incorrect literal. expected=%q, got=%q",
-				i, et.expectedLiteral, nt.Literal)
-		}
-	}
+	assertTokenizes(t, l, tests)
 }
