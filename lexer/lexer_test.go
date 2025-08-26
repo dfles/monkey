@@ -29,6 +29,9 @@ func TestNextTokenOperators(t *testing.T) {
 	input := `
 	!+-/*=
 	5 < 10 > 5
+
+	10 == 10
+	1 != 2
 	`
 
 	tests := []expectedToken{
@@ -44,6 +47,14 @@ func TestNextTokenOperators(t *testing.T) {
 		{INT, "10"},
 		{GT, ">"},
 		{INT, "5"},
+
+		{INT, "10"},
+		{EQ, "=="},
+		{INT, "10"},
+
+		{INT, "1"},
+		{NEQ, "!="},
+		{INT, "2"},
 
 		{EOF, ""},
 	}

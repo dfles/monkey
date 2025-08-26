@@ -25,6 +25,13 @@ func (l *Lexer) readChar() {
 	l.position = l.position + 1
 }
 
+func (l *Lexer) peekChar() byte {
+	if l.position >= len(l.input) {
+		return 0
+	}
+	return l.input[l.position]
+}
+
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
@@ -43,6 +50,25 @@ func (l *Lexer) readIdentifier() Token {
 	}
 
 	return NewIdentifier(l.input[start:l.readPosition])
+}
+
+func (l *Lexer) readToken() Token {
+	// Handle special, double character tokens.
+	//
+	// This makes the interface feel a bit awkward as token.go is no
+	// longer responsible for taking in a value and spitting out a Token.
+	//
+	// The nice thing about this is that exceptions to token reading are
+	// very explicit.
+	if l.ch == '=' && l.peekChar() == '=' {
+		l.readChar()
+		return Token{Type: EQ, Literal: "=="}
+	} else if l.ch == '!' && l.peekChar() == '=' {
+		l.readChar()
+		return Token{Type: NEQ, Literal: "!="}
+	}
+
+	return NewToken(l.ch)
 }
 
 func isDigit(ch byte) bool {
@@ -68,7 +94,7 @@ func (l *Lexer) NextToken() Token {
 	} else if isDigit(l.ch) {
 		t = l.readNumber()
 	} else {
-		t = NewToken(l.ch)
+		t = l.readToken()
 		l.readChar() // Advance for the next read
 	}
 
