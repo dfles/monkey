@@ -21,6 +21,8 @@ func TestLetStatements(t *testing.T) {
 		t.Fatalf("ParseProgram() return nil")
 	}
 
+	checkParserErrors(t, p)
+
 	if len(prog.Statements) != 3 {
 		t.Fatalf("Expected 3 statements, got=%d", len(prog.Statements))
 	}
@@ -64,4 +66,18 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	}
 
 	return true
+}
+
+func checkParserErrors(t *testing.T, p *Parser) {
+	errors := p.Errors()
+	if len(errors) == 0 {
+		return
+	}
+
+	t.Errorf("Parser has %d errors", len(errors))
+
+	for _, msg := range errors {
+		t.Errorf("Parser error: %q", msg)
+	}
+	t.FailNow()
 }
