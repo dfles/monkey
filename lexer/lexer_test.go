@@ -1,11 +1,12 @@
 package lexer
 
 import (
+	"monkey/token"
 	"testing"
 )
 
 type expectedToken struct {
-	expectedType    TokenType
+	expectedType    token.TokenType
 	expectedLiteral string
 }
 
@@ -35,28 +36,28 @@ func TestNextTokenOperators(t *testing.T) {
 	`
 
 	tests := []expectedToken{
-		{BANG, "!"},
-		{PLUS, "+"},
-		{MINUS, "-"},
-		{SLASH, "/"},
-		{ASTERISK, "*"},
-		{ASSIGN, "="},
+		{token.BANG, "!"},
+		{token.PLUS, "+"},
+		{token.MINUS, "-"},
+		{token.SLASH, "/"},
+		{token.ASTERISK, "*"},
+		{token.ASSIGN, "="},
 
-		{INT, "5"},
-		{LT, "<"},
-		{INT, "10"},
-		{GT, ">"},
-		{INT, "5"},
+		{token.INT, "5"},
+		{token.LT, "<"},
+		{token.INT, "10"},
+		{token.GT, ">"},
+		{token.INT, "5"},
 
-		{INT, "10"},
-		{EQ, "=="},
-		{INT, "10"},
+		{token.INT, "10"},
+		{token.EQ, "=="},
+		{token.INT, "10"},
 
-		{INT, "1"},
-		{NEQ, "!="},
-		{INT, "2"},
+		{token.INT, "1"},
+		{token.NEQ, "!="},
+		{token.INT, "2"},
 
-		{EOF, ""},
+		{token.EOF, ""},
 	}
 
 	l := New(input)
@@ -70,19 +71,19 @@ func TestNextTokenVariable(t *testing.T) {
 	`
 
 	tests := []expectedToken{
-		{LET, "let"},
-		{IDENTIFIER, "five"},
-		{ASSIGN, "="},
-		{INT, "5"},
-		{SEMICOLON, ";"},
+		{token.LET, "let"},
+		{token.IDENTIFIER, "five"},
+		{token.ASSIGN, "="},
+		{token.INT, "5"},
+		{token.SEMICOLON, ";"},
 
-		{LET, "let"},
-		{IDENTIFIER, "ten"},
-		{ASSIGN, "="},
-		{INT, "10"},
-		{SEMICOLON, ";"},
+		{token.LET, "let"},
+		{token.IDENTIFIER, "ten"},
+		{token.ASSIGN, "="},
+		{token.INT, "10"},
+		{token.SEMICOLON, ";"},
 
-		{EOF, ""},
+		{token.EOF, ""},
 	}
 
 	l := New(input)
@@ -99,34 +100,34 @@ func TestNextTokenFunction(t *testing.T) {
 	`
 
 	tests := []expectedToken{
-		{LET, "let"},
-		{IDENTIFIER, "add"},
-		{ASSIGN, "="},
-		{FUNCTION, "fn"},
-		{LPAREN, "("},
-		{IDENTIFIER, "x"},
-		{COMMA, ","},
-		{IDENTIFIER, "y"},
-		{RPAREN, ")"},
-		{LBRACE, "{"},
-		{IDENTIFIER, "x"},
-		{PLUS, "+"},
-		{IDENTIFIER, "y"},
-		{RBRACE, "}"},
-		{SEMICOLON, ";"},
+		{token.LET, "let"},
+		{token.IDENTIFIER, "add"},
+		{token.ASSIGN, "="},
+		{token.FUNCTION, "fn"},
+		{token.LPAREN, "("},
+		{token.IDENTIFIER, "x"},
+		{token.COMMA, ","},
+		{token.IDENTIFIER, "y"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.IDENTIFIER, "x"},
+		{token.PLUS, "+"},
+		{token.IDENTIFIER, "y"},
+		{token.RBRACE, "}"},
+		{token.SEMICOLON, ";"},
 
-		{LET, "let"},
-		{IDENTIFIER, "result"},
-		{ASSIGN, "="},
-		{IDENTIFIER, "add"},
-		{LPAREN, "("},
-		{INT, "5"},
-		{COMMA, ","},
-		{INT, "10"},
-		{RPAREN, ")"},
-		{SEMICOLON, ";"},
+		{token.LET, "let"},
+		{token.IDENTIFIER, "result"},
+		{token.ASSIGN, "="},
+		{token.IDENTIFIER, "add"},
+		{token.LPAREN, "("},
+		{token.INT, "5"},
+		{token.COMMA, ","},
+		{token.INT, "10"},
+		{token.RPAREN, ")"},
+		{token.SEMICOLON, ";"},
 
-		{EOF, ""},
+		{token.EOF, ""},
 	}
 
 	l := New(input)
@@ -145,39 +146,38 @@ func TestNextTokenControlFlow(t *testing.T) {
 	`
 
 	tests := []expectedToken{
-		{LET, "let"},
-		{IDENTIFIER, "gt"},
-		{ASSIGN, "="},
-		{FUNCTION, "fn"},
-		{LPAREN, "("},
-		{IDENTIFIER, "l"},
-		{COMMA, ","},
-		{IDENTIFIER, "r"},
-		{RPAREN, ")"},
-		{LBRACE, "{"},
+		{token.LET, "let"},
+		{token.IDENTIFIER, "gt"},
+		{token.ASSIGN, "="},
+		{token.FUNCTION, "fn"},
+		{token.LPAREN, "("},
+		{token.IDENTIFIER, "l"},
+		{token.COMMA, ","},
+		{token.IDENTIFIER, "r"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
 
-		{IF, "if"},
-		{LPAREN, "("},
-		{IDENTIFIER, "l"},
-		{GT, ">"},
-		{IDENTIFIER, "r"},
-		{RPAREN, ")"},
-		{LBRACE, "{"},
-		{RETURN, "return"},
-		{TRUE, "true"},
-		{SEMICOLON, ";"},
-		{RBRACE, "}"},
-		{RETURN, "return"},
-		{FALSE, "false"},
-		{SEMICOLON, ";"},
+		{token.IF, "if"},
+		{token.LPAREN, "("},
+		{token.IDENTIFIER, "l"},
+		{token.GT, ">"},
+		{token.IDENTIFIER, "r"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.RETURN, "return"},
+		{token.TRUE, "true"},
+		{token.SEMICOLON, ";"},
+		{token.RBRACE, "}"},
+		{token.RETURN, "return"},
+		{token.FALSE, "false"},
+		{token.SEMICOLON, ";"},
 
-		{RBRACE, "}"},
-		{SEMICOLON, ";"},
+		{token.RBRACE, "}"},
+		{token.SEMICOLON, ";"},
 
-		{EOF, ""},
+		{token.EOF, ""},
 	}
 
 	l := New(input)
 	testTokenizes(t, l, tests)
-
 }

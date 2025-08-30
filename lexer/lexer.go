@@ -1,5 +1,7 @@
 package lexer
 
+import "monkey/token"
+
 type Lexer struct {
 	input        string
 	position     int
@@ -14,8 +16,8 @@ func New(input string) *Lexer {
 	return l
 }
 
-func (l *Lexer) NextToken() Token {
-	var t Token
+func (l *Lexer) NextToken() token.Token {
+	var t token.Token
 	l.skipWhitespace()
 
 	if isLetter(l.ch) {
@@ -54,21 +56,21 @@ func (l *Lexer) skipWhitespace() {
 	}
 }
 
-func (l *Lexer) readIdentifier() Token {
+func (l *Lexer) readIdentifier() token.Token {
 	start := l.readPosition
 
 	for isLetter(l.ch) {
 		l.readChar()
 	}
 
-	return NewIdentifier(l.input[start:l.readPosition])
+	return token.NewIdentifier(l.input[start:l.readPosition])
 }
 
 func isLetter(ch byte) bool {
 	return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_'
 }
 
-func (l *Lexer) readToken() Token {
+func (l *Lexer) readToken() token.Token {
 	// Handle special, double character tokens.
 	//
 	// This makes the interface feel a bit awkward as token.go is no
@@ -78,23 +80,23 @@ func (l *Lexer) readToken() Token {
 	// very explicit.
 	if l.ch == '=' && l.peekChar() == '=' {
 		l.readChar()
-		return Token{Type: EQ, Literal: "=="}
+		return token.Token{Type: token.EQ, Literal: "=="}
 	} else if l.ch == '!' && l.peekChar() == '=' {
 		l.readChar()
-		return Token{Type: NEQ, Literal: "!="}
+		return token.Token{Type: token.NEQ, Literal: "!="}
 	}
 
-	return NewToken(l.ch)
+	return token.NewToken(l.ch)
 }
 
-func (l *Lexer) readNumber() Token {
+func (l *Lexer) readNumber() token.Token {
 	start := l.readPosition
 
 	for isDigit(l.ch) {
 		l.readChar()
 	}
 
-	return NewInt(l.input[start:l.readPosition])
+	return token.NewInt(l.input[start:l.readPosition])
 }
 
 func isDigit(ch byte) bool {
