@@ -9,7 +9,7 @@ type expectedToken struct {
 	expectedLiteral string
 }
 
-func assertTokenizes(t *testing.T, l *Lexer, tests []expectedToken) {
+func testTokenizes(t *testing.T, l *Lexer, tests []expectedToken) {
 	for i, et := range tests {
 		nt := l.NextToken()
 
@@ -60,7 +60,7 @@ func TestNextTokenOperators(t *testing.T) {
 	}
 
 	l := New(input)
-	assertTokenizes(t, l, tests)
+	testTokenizes(t, l, tests)
 }
 
 func TestNextTokenVariable(t *testing.T) {
@@ -86,7 +86,7 @@ func TestNextTokenVariable(t *testing.T) {
 	}
 
 	l := New(input)
-	assertTokenizes(t, l, tests)
+	testTokenizes(t, l, tests)
 }
 
 func TestNextTokenFunction(t *testing.T) {
@@ -130,7 +130,7 @@ func TestNextTokenFunction(t *testing.T) {
 	}
 
 	l := New(input)
-	assertTokenizes(t, l, tests)
+	testTokenizes(t, l, tests)
 }
 
 func TestNextTokenControlFlow(t *testing.T) {
@@ -178,6 +178,6 @@ func TestNextTokenControlFlow(t *testing.T) {
 	}
 
 	l := New(input)
-	assertTokenizes(t, l, tests)
+	testTokenizes(t, l, tests)
 
 }
